@@ -23,13 +23,20 @@ final class Wsse implements Authentication
     private $password;
 
     /**
-     * @param string $username
-     * @param string $password
+     * @var bool
      */
-    public function __construct($username, $password)
+    private $useSha512;
+
+    /**
+     * @param string     $username
+     * @param string     $password
+     * @param bool|false $useSha512
+     */
+    public function __construct($username, $password, $useSha512 = false)
     {
         $this->username = $username;
         $this->password = $password;
+        $this->useSha512 = $useSha512;
     }
 
     /**
@@ -37,10 +44,12 @@ final class Wsse implements Authentication
      */
     public function authenticate(RequestInterface $request)
     {
-        // TODO: generate better nonce?
         $nonce = substr(md5(uniqid(uniqid().'_', true)), 0, 16);
         $created = date('c');
         $digest = base64_encode(sha1(base64_decode($nonce).$created.$this->password, true));
+        if (true === $this->useSha512) {
+            $digest = base64_encode(hash('sha512', base64_decode($nonce).$created.$this->password, true));
+        }
 
         $wsse = sprintf(
             'UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"',
