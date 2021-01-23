@@ -53,7 +53,7 @@ final class Wsse implements Authentication
         $nonce = substr(md5(uniqid(uniqid().'_', true)), 0, 16);
         $created = date('c');
         if (false === in_array($this->hashAlgorithm, $this->acceptedHashAlgos)) {
-            throw new InvalidArgumentException(sprintf('Unaccepted hashing algorithm: ', $this->hashAlgorithm));
+            throw new InvalidArgumentException(sprintf('Unaccepted hashing algorithm: %s', $this->hashAlgorithm));
         }
         $digest = base64_encode(hash($this->hashAlgorithm, base64_decode($nonce).$created.$this->password, true));
 
