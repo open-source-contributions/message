@@ -2,8 +2,8 @@
 
 namespace Http\Message\Authentication;
 
-use InvalidArgumentException;
 use Http\Message\Authentication;
+use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -29,9 +29,9 @@ final class Wsse implements Authentication
     private $acceptedHashAlgos = ['sha1', 'sha512', 'sha384', 'sha3-384', 'sha3-512'];
 
     /**
-     * @param string     $username
-     * @param string     $password
-     * @param string     $hashAlgorithm To use a better hashing algorithm than the weak sha1, pass the algorithm to use, e.g. "sha512"
+     * @param string $username
+     * @param string $password
+     * @param string $hashAlgorithm To use a better hashing algorithm than the weak sha1, pass the algorithm to use, e.g. "sha512"
      */
     public function __construct($username, $password, $hashAlgorithm = 'sha1')
     {
