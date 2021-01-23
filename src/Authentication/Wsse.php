@@ -24,7 +24,12 @@ final class Wsse implements Authentication
     private $password;
 
     /**
-     * @var array
+     * @var string
+     */
+    private $hashAlgorithm;
+
+    /**
+     * @var array<string>
      */
     private $acceptedHashAlgos = ['sha1', 'sha512', 'sha384', 'sha3-384', 'sha3-512'];
 
