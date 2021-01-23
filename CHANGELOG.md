@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.11.0] - unreleased
 
-- Allow to specify the hasing algorithm for WSSE authentication.
+- Allow to specify the hashing algorithm for WSSE authentication.
 
 ## [1.10.0] - 2020-11-11
 

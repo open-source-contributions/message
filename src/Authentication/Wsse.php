@@ -2,6 +2,7 @@
 
 namespace Http\Message\Authentication;
 
+use InvalidArgumentException;
 use Http\Message\Authentication;
 use Psr\Http\Message\RequestInterface;
 
@@ -23,20 +24,20 @@ final class Wsse implements Authentication
     private $password;
 
     /**
-     * @var bool
+     * @var array
      */
-    private $useSha512;
+    private $acceptedHashAlgos = ['sha1', 'sha512', 'sha384', 'sha3-384', 'sha3-512'];
 
     /**
      * @param string     $username
      * @param string     $password
-     * @param bool|false $useSha512
+     * @param string     $hashAlgorithm To use a better hashing algorithm than the weak sha1, pass the algorithm to use, e.g. "sha512"
      */
-    public function __construct($username, $password, $useSha512 = false)
+    public function __construct($username, $password, $hashAlgorithm = 'sha1')
     {
         $this->username = $username;
         $this->password = $password;
-        $this->useSha512 = $useSha512;
+        $this->hashAlgorithm = $hashAlgorithm;
     }
 
     /**
@@ -46,10 +47,10 @@ final class Wsse implements Authentication
     {
         $nonce = substr(md5(uniqid(uniqid().'_', true)), 0, 16);
         $created = date('c');
-        $digest = base64_encode(sha1(base64_decode($nonce).$created.$this->password, true));
-        if (true === $this->useSha512) {
-            $digest = base64_encode(hash('sha512', base64_decode($nonce).$created.$this->password, true));
+        if (false === in_array($this->hashAlgorithm, $this->acceptedHashAlgos)) {
+            throw new InvalidArgumentException(sprintf('Unaccepted hashing algorithm: ', $this->hashAlgorithm));
         }
+        $digest = base64_encode(hash($this->hashAlgorithm, base64_decode($nonce).$created.$this->password, true));
 
         $wsse = sprintf(
             'UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"',
